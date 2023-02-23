@@ -29,7 +29,6 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _selectedDate = DateTime.now();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +75,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
-              // ignore: sort_child_properties_last
+            
               child: const Icon(Icons.add),
               onPressed:(){
         Navigator.push(context,MaterialPageRoute(builder: (BuildContext context){
@@ -88,7 +87,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               backgroundColor: Colors.purple,
 
             ),
-            //floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+            
     );
   }
 
@@ -111,43 +110,28 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
-  TextEditingController _titleController = TextEditingController();
+ TextEditingController _titleController = TextEditingController();
   TextEditingController _titleController1 = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-  TextEditingController _descriptionController1 = TextEditingController();
+  TextEditingController _titleController2 = TextEditingController();
+  TextEditingController _titleController3 = TextEditingController();
+  TextEditingController _titleController4 = TextEditingController();
+  TextEditingController _titleController5 = TextEditingController();
   
   
   // ignore: prefer_typing_uninitialized_variables
   var floatingActionButton;
   
- 
-
-  @override
-  void initState() {
-    super.initState();
-    _titleController = TextEditingController();
-    _descriptionController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 232, 211, 217),
       appBar: AppBar(
-        title: const Text('Add birthday'),
         backgroundColor: Color.fromARGB(255, 154, 192, 236),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-        
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             
@@ -169,7 +153,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
              ),
       ),
             // ignore: prefer_const_constructors
-            SizedBox(height: 20.0,
+            SizedBox(height: 10.0,
             child: const DecoratedBox(
               decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 244, 54, 190)),
@@ -182,59 +166,57 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 10.0),
             TextField(
-              controller: _titleController1,
+              controller: _titleController2,
               maxLines: 1,
               decoration: InputDecoration(
                 hintText: 'Phone number',
                 border: OutlineInputBorder(),
               ),
             ),            
-            SizedBox(height: 20.0),
+            SizedBox(height: 10.0),
             TextField(
-              controller: _descriptionController,
-              maxLines: 4,
+              controller: _titleController2,
+              maxLines: 1,
               decoration: InputDecoration(
-                hintText: 'Wishlist',
+                hintText: 'Category',
                 border: OutlineInputBorder(),
                 
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 10.0),
             TextField(
-              controller: _descriptionController1,
-              maxLines: 4,
+              controller: _titleController3,
+              maxLines: 1,
               decoration: InputDecoration(
-                hintText: 'Other information',
+                hintText: 'Date',
                 border: OutlineInputBorder(),
               ),
-            ),
-            // ignore: prefer_const_constructors
-            
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: () {
-                final newAppointment = Appointment(
-                  startTime: widget.selectedDate,
-                  endTime: widget.selectedDate.add(Duration(hours: 1)),
-                  subject: _titleController.text,
-                  notes: _descriptionController.text,
-                  color: Colors.blue,
-                );
-                Navigator.pop(context, newAppointment);
-              },
-              child:Text('Add birthday'),
-            ),
+            ),          
+            SizedBox(height: 10.0),
+            TextField(
+              controller: _titleController4,
+              maxLines: 4,
+              decoration: InputDecoration(
+                hintText: 'Wishlist',
+                border: OutlineInputBorder(),
+              ),
+            ),          
+            SizedBox(height: 10.0),
+            TextField(
+              controller: _titleController5,
+              maxLines: 4,
+              decoration: InputDecoration(
+                hintText: 'Other Information',
+                border: OutlineInputBorder(),
+              ),
+            ),          
           ],
         ),
       ),
-     floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-     floatingActionButton: FloatingActionButton(
-      onPressed:() {}, 
-      backgroundColor: Colors.purple,
-      child: const Icon(Icons.add),
-     ),
+   
     );
   }
 }
+
