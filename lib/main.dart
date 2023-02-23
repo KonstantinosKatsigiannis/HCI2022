@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' show Appointment, CalendarView, SfCalendar;
 import 'tofilter.dart';
+import 'package:myapp/AddPage.dart';
 
 void main() => runApp(const MyApp());
 
@@ -26,6 +27,7 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+  DateTime _selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -71,15 +73,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
               // ignore: sort_child_properties_last
               child: const Icon(Icons.add),
-              onPressed:(){},
+              onPressed:(){
+        Navigator.push(context,MaterialPageRoute(builder: (BuildContext context){
+          return  AddScreen(selectedDate: DateTime.now());
+        },),
+      );  
+        },
               tooltip: 'Add birthday',
-              backgroundColor: Color.fromARGB(255, 88, 28, 208),
+              backgroundColor: Colors.purple,
 
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+            //floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 
@@ -211,20 +219,21 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   endTime: widget.selectedDate.add(Duration(hours: 1)),
                   subject: _titleController.text,
                   notes: _descriptionController.text,
-                  
+                  color: Colors.blue,
                 );
                 Navigator.pop(context, newAppointment);
               },
               child:Text('Add birthday'),
-              
-
-              
-              
             ),
           ],
         ),
       ),
-        
+     floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+     floatingActionButton: FloatingActionButton(
+      onPressed:() {}, 
+      backgroundColor: Colors.purple,
+      child: const Icon(Icons.add),
+     ),
     );
   }
 }
