@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' show Appointment, CalendarView, SfCalendar;
+import 'tofilter.dart';
 
 void main() => runApp(const MyApp());
 
@@ -34,7 +35,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
         tooltip:'Options',
         icon: const Icon(Icons.menu), 
         onPressed: () { 
-      
+        Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) { return ToFilter(); },
+        ),
+        );
          },),
         title: const Text('My Calendar'),
         backgroundColor: Color.fromARGB(255, 154, 192, 236),
