@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  google_fonts: ^4.0.3
   syncfusion_flutter_calendar: ^20.4.50
 
 dev_dependencies:

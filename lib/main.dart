@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' show Appointment, CalendarView, SfCalendar;
 import 'tofilter.dart';
-import 'package:myapp/AddPage.dart';
+import '/AddPage.dart';
 
 void main() => runApp(const MyApp());
 
