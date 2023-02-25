@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:myapp/ut.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' show Appointment, CalendarView, SfCalendar;
 
 class AddScreen extends StatefulWidget {
   const AddScreen({super.key, required selectedDate});
-  
+
   get selectedDate => null;
 
   @override
@@ -18,7 +19,10 @@ TextEditingController _titleController = TextEditingController();
   TextEditingController _titleController2 = TextEditingController();
   TextEditingController _titleController3 = TextEditingController();
   TextEditingController _titleController4 = TextEditingController();
-  TextEditingController _titleController5 = TextEditingController();
+  
+
+late DateTime NowDate;
+DateTime _selectedDate = DateTime.now();
 
   var floatingActionButton;
 
@@ -75,6 +79,9 @@ TextEditingController _titleController = TextEditingController();
                 border: OutlineInputBorder(),
               ),
             ),
+             SizedBox(height: 10.0),
+            buildDateTimePickers(),
+
             SizedBox(height: 10.0),
             TextField(
               controller: _titleController2,
@@ -84,22 +91,10 @@ TextEditingController _titleController = TextEditingController();
                 border: OutlineInputBorder(),
               ),
             ),    
-            SizedBox(height: 10.0,
-            child: const DecoratedBox(
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 244, 54, 190)),
-            ),
-            ),
-            TextField(
-              controller: _titleController3,
-              decoration: InputDecoration(
-                hintText: 'Date',
-                border: OutlineInputBorder(),
-              ),
-            ),        
+              
             SizedBox(height: 10.0),
             TextField(
-              controller: _titleController4,
+              controller: _titleController3,
               maxLines: 4,
               decoration: InputDecoration(
                 hintText: 'Wishlist',
@@ -109,25 +104,58 @@ TextEditingController _titleController = TextEditingController();
             ),
             SizedBox(height: 10.0),
             TextField(
-              controller: _titleController5,
+              controller: _titleController4,
               maxLines: 4,
               decoration: InputDecoration(
                 hintText: 'Other information',
                 border: OutlineInputBorder(),
-              ),
+              ),  
             ),
             // ignore: prefer_const_constructors
             
+
             //Add Birthday Button
             SizedBox(height: 10.0),
             ElevatedButton(
               onPressed: () {},
               child:Text('Add birthday'),
-            ),
+            ),  
+
           ],
         ),
       ),
  
     );   
   }
+  
+  buildDateTimePickers() => Column(
+    children: [
+      buildFrom(),
+    ],
+    );
+    
+      buildFrom() => Row(
+        children:[
+         Expanded(
+          child: buildDropdownField(
+            text: ut.toDate(DateTime.now()),
+            onClicked: () => pickFromDateTime(),
+            ),
+          ),
+        ],
+      );
+
+
+buildDropdownField({
+  required String text, 
+  required VoidCallback onClicked,
+  }) =>
+  ListTile(
+    title: Text(text),
+    trailing: Icon(Icons.calendar_month),
+    );
+    
+      pickFromDateTime() async {
+        final date = await pickFromDateTime();
+      }
 }
