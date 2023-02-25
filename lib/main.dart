@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/ut.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' show Appointment, CalendarView, SfCalendar;
 import 'tofilter.dart';
 import '/AddPage.dart';
@@ -28,6 +29,7 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _selectedDate = DateTime.now();
+late DateTime NowDate;
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +117,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   TextEditingController _titleController2 = TextEditingController();
   TextEditingController _titleController3 = TextEditingController();
   TextEditingController _titleController4 = TextEditingController();
-  TextEditingController _titleController5 = TextEditingController();
+  
   
   
   // ignore: prefer_typing_uninitialized_variables
@@ -168,7 +170,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             ),
             SizedBox(height: 10.0),
             TextField(
-              controller: _titleController2,
+              controller: _titleController1,
               maxLines: 1,
               decoration: InputDecoration(
                 hintText: 'Phone number',
@@ -185,18 +187,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 
               ),
             ),
+
+SizedBox(height: 10.0),
+            buildDateTimePickers(),
+
+
             SizedBox(height: 10.0),
             TextField(
               controller: _titleController3,
-              maxLines: 1,
-              decoration: InputDecoration(
-                hintText: 'Date',
-                border: OutlineInputBorder(),
-              ),
-            ),          
-            SizedBox(height: 10.0),
-            TextField(
-              controller: _titleController4,
               maxLines: 4,
               decoration: InputDecoration(
                 hintText: 'Wishlist',
@@ -205,7 +203,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             ),          
             SizedBox(height: 10.0),
             TextField(
-              controller: _titleController5,
+              controller: _titleController4,
               maxLines: 4,
               decoration: InputDecoration(
                 hintText: 'Other Information',
@@ -220,3 +218,33 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 }
 
+buildDateTimePickers() => Column(
+    children: [
+      buildFrom(),
+    ],
+    );
+    
+      buildFrom() => Row(
+        children:[
+         Expanded(
+          child: buildDropdownField(
+            text: ut.toDate(DateTime.now()),
+            onClicked: () => pickFromDateTime(),
+            ),
+          ),
+        ],
+      );
+
+
+buildDropdownField({
+  required String text, 
+  required VoidCallback onClicked,
+  }) =>
+  ListTile(
+    title: Text(text),
+    trailing: Icon(Icons.calendar_month),
+    );
+    
+      pickFromDateTime() async {
+        final date = await pickFromDateTime();
+      }
