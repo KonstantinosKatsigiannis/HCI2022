@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/ut.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart' show Appointment, CalendarView, SfCalendar;
+import 'ut.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart'
+    show Appointment, CalendarView, SfCalendar;
 import 'tofilter.dart';
-import '/AddPage.dart';
+import 'AddPage.dart';
 
 void main() => runApp(const MyApp());
 
@@ -29,24 +30,29 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _selectedDate = DateTime.now();
-late DateTime NowDate;
+  late DateTime NowDate;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-        tooltip:'Options',
-        icon: const Icon(Icons.menu), 
-        onPressed: () { 
-        Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) { return ToFilter(); },
+          tooltip: 'Options',
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return ToFilter();
+                },
+              ),
+            );
+          },
         ),
-        );
-         },),
         title: const Text('My Calendar'),
         backgroundColor: Color.fromARGB(255, 154, 192, 236),
       ),
-      
       body: Column(
         children: [
           Expanded(
@@ -56,11 +62,13 @@ late DateTime NowDate;
               backgroundColor: Color.fromARGB(255, 232, 211, 217),
               //dataSource: _getCalendarDataSource(),
               onTap: (details) {
-                if (details.appointments == null || details.appointments!.isEmpty) {
+                if (details.appointments == null ||
+                    details.appointments!.isEmpty) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailsScreen(selectedDate: details.date!),
+                      builder: (context) =>
+                          DetailsScreen(selectedDate: details.date!),
                     ),
                   );
                 } else {
@@ -77,28 +85,22 @@ late DateTime NowDate;
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
-            
-              child: const Icon(Icons.add),
-              onPressed:(){
-        Navigator.push(context,MaterialPageRoute(builder: (BuildContext context){
-          return  AddScreen(selectedDate: DateTime.now());
-        },),
-      );  
-        },
-              tooltip: 'Add birthday',
-              backgroundColor: Colors.purple,
-
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return AddScreen(selectedDate: DateTime.now());
+              },
             ),
-            
+          );
+        },
+        tooltip: 'Add birthday',
+        backgroundColor: Colors.purple,
+      ),
     );
   }
-
-  
-}
-
-// ignore: unused_element
-class _AppointmentDataSource {
-  _AppointmentDataSource(List<Appointment> appointments);
 }
 
 class DetailsScreen extends StatefulWidget {
@@ -112,17 +114,14 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
- TextEditingController _titleController = TextEditingController();
+  TextEditingController _titleController = TextEditingController();
   TextEditingController _titleController1 = TextEditingController();
   TextEditingController _titleController2 = TextEditingController();
   TextEditingController _titleController3 = TextEditingController();
   TextEditingController _titleController4 = TextEditingController();
-  
-  
-  
+
   // ignore: prefer_typing_uninitialized_variables
   var floatingActionButton;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -136,30 +135,30 @@ class _DetailsScreenState extends State<DetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
             Text(
               'Date: ${widget.selectedDate.day}/${widget.selectedDate.month}/${widget.selectedDate.year}',
-              style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              style:
+                  const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
-        
-                        
-           SizedBox(
-             width: 80.0,
-             height: 80.0, 
-             child: IconButton(
-              icon: Icon(Icons.account_box), 
-              iconSize: 80,
-              onPressed:(){},
-              tooltip: 'Add Photo',
-              color:  Color.fromARGB(255, 34, 3, 50),
-             ),
-      ),
+
+            SizedBox(
+              width: 80.0,
+              height: 80.0,
+              child: IconButton(
+                icon: Icon(Icons.account_box),
+                iconSize: 80,
+                onPressed: () {},
+                tooltip: 'Add Photo',
+                color: Color.fromARGB(255, 34, 3, 50),
+              ),
+            ),
             // ignore: prefer_const_constructors
-            SizedBox(height: 10.0,
-            child: const DecoratedBox(
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 244, 54, 190)),
-            ),
+            SizedBox(
+              height: 10.0,
+              child: const DecoratedBox(
+                decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 244, 54, 190)),
+              ),
             ),
             TextField(
               controller: _titleController,
@@ -176,7 +175,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 hintText: 'Phone number',
                 border: OutlineInputBorder(),
               ),
-            ),            
+            ),
             SizedBox(height: 10.0),
             TextField(
               controller: _titleController2,
@@ -184,13 +183,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
               decoration: InputDecoration(
                 hintText: 'Category',
                 border: OutlineInputBorder(),
-                
               ),
             ),
 
-SizedBox(height: 10.0),
+            SizedBox(height: 10.0),
             buildDateTimePickers(),
-
 
             SizedBox(height: 10.0),
             TextField(
@@ -200,7 +197,7 @@ SizedBox(height: 10.0),
                 hintText: 'Wishlist',
                 border: OutlineInputBorder(),
               ),
-            ),          
+            ),
             SizedBox(height: 10.0),
             TextField(
               controller: _titleController4,
@@ -209,42 +206,40 @@ SizedBox(height: 10.0),
                 hintText: 'Other Information',
                 border: OutlineInputBorder(),
               ),
-            ),          
+            ),
           ],
         ),
       ),
-   
     );
   }
 }
 
 buildDateTimePickers() => Column(
-    children: [
-      buildFrom(),
-    ],
+      children: [
+        buildFrom(),
+      ],
     );
-    
-      buildFrom() => Row(
-        children:[
-         Expanded(
-          child: buildDropdownField(
-            text: ut.toDate(DateTime.now()),
-            onClicked: () => pickFromDateTime(),
-            ),
-          ),
-        ],
-      );
 
+buildFrom() => Row(
+      children: [
+        Expanded(
+          child: buildDropdownField(
+            text: ut.theDate(DateTime.now()),
+            onClicked: () => pickFromDateTime(),
+          ),
+        ),
+      ],
+    );
 
 buildDropdownField({
-  required String text, 
+  required String text,
   required VoidCallback onClicked,
-  }) =>
-  ListTile(
-    title: Text(text),
-    trailing: Icon(Icons.calendar_month),
+}) =>
+    ListTile(
+      title: Text(text),
+      trailing: Icon(Icons.calendar_month),
     );
-    
-      pickFromDateTime() async {
-        final date = await pickFromDateTime();
-      }
+
+pickFromDateTime() async {
+  final date = await pickFromDateTime();
+}
