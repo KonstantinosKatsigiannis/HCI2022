@@ -6,6 +6,8 @@ import 'package:syncfusion_flutter_calendar/calendar.dart'
     show Appointment, CalendarView, SfCalendar;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'DisplayScreen.dart';
 
 class AddScreen extends StatefulWidget {
   const AddScreen({super.key, required selectedDate});
@@ -22,12 +24,32 @@ class _AddScreenState extends State<AddScreen> {
   TextEditingController _titleController2 = TextEditingController();
   TextEditingController _titleController3 = TextEditingController();
   TextEditingController _titleController4 = TextEditingController();
+  TextEditingController _dateController = TextEditingController();
+  
+
+
+  late SharedPreferences _prefs;
+  Future<void> _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
 
   @override
   void initState() {
     super.initState();
-
+    _initPrefs();
     NowDate = DateTime.now();
+  }
+
+  Future<void> saveData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+    prefs.setString('name_$timestamp', _titleController.text);
+    prefs.setString('phone_$timestamp', _titleController1.text);
+    prefs.setString('date_$timestamp', _dateController.text);
+    prefs.setString('category_$timestamp', _titleController2.text);
+    prefs.setString('wishlist_$timestamp', _titleController3.text);
+    prefs.setString('other_$timestamp', _titleController4.text);
+    prefs.setString('image_$timestamp', _imageFile.path);
   }
 
   late DateTime NowDate = DateTime.now();
@@ -74,9 +96,6 @@ class _AddScreenState extends State<AddScreen> {
                         onPressed: () {},
                         tooltip: 'Add Photo',
                         color: const Color.fromARGB(255, 34, 3, 50),
-                        // onPressed: () {
-                        //   _pickImage(ImageSource.gallery);
-                        // },
                       )
                     : SizedBox(
                         width: 200,
@@ -149,8 +168,12 @@ class _AddScreenState extends State<AddScreen> {
               ),
               SizedBox(height: 10.0),
               ElevatedButton(
-                onPressed: () {},
-                child: Text('Add birthday'),
+                onPressed: () async {
+                  await saveData();
+                  
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Add birthday'),
               ),
             ],
           ),
@@ -171,6 +194,7 @@ class _AddScreenState extends State<AddScreen> {
             child: buildDropdownField(
               text: ut.theDate(NowDate),
               onClicked: () => picktheDateTime(),
+              controller: _dateController,
             ),
           ),
         ],
@@ -179,10 +203,19 @@ class _AddScreenState extends State<AddScreen> {
   Widget buildDropdownField({
     required String text,
     required VoidCallback onClicked,
+    required TextEditingController controller,
   }) =>
       ListTile(
-        title: Text(text),
-        trailing: Icon(Icons.calendar_month),
+        title: TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: 'Select a date',
+            border: OutlineInputBorder(),
+          ),
+          onTap: onClicked,
+          readOnly: true,
+        ),
+        trailing: Icon(Icons.calendar_today),
         onTap: onClicked,
       );
 
@@ -190,7 +223,10 @@ class _AddScreenState extends State<AddScreen> {
 
   Future picktheDateTime() async {
     final date = await pickDateTime(NowDate);
-    setState(() => NowDate = date!);
+    if (date != null) {
+      _dateController.text = ut.theDate(date);
+      setState(() => NowDate = date);
+    }
   }
 
   Future<DateTime?> pickDateTime(
@@ -201,7 +237,7 @@ class _AddScreenState extends State<AddScreen> {
       context: context,
       firstDate: firstDate ?? DateTime(2015, 8),
       lastDate: DateTime(2101),
-      initialDate: NowDate,
+      initialDate: initialDate, // Pass initialDate instead of NowDate
     );
 
     return date;
