@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'ut.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart'
-    show Appointment, CalendarView, SfCalendar;
+import 'package:syncfusion_flutter_calendar/calendar.dart';
+//show Appointment, CalendarView, SfCalendar, CalendarHeaderStyle;
 import 'tofilter.dart';
 import 'AddPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'DisplayScreen.dart';
+import 'package:intl/intl.dart';
 
 void main() => runApp(const MyApp());
 
@@ -57,27 +60,36 @@ class _CalendarScreenState extends State<CalendarScreen> {
         children: [
           Expanded(
             child: SfCalendar(
+              headerStyle: const CalendarHeaderStyle(
+                textStyle: TextStyle(
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.center,
+                
+                //backgroundColor: Colors.grey[200],
+              ),
               initialDisplayDate: DateTime.now(),
               view: CalendarView.month,
               backgroundColor: Color.fromARGB(255, 232, 211, 217),
               //dataSource: _getCalendarDataSource(),
               onTap: (details) {
-                if (details.appointments == null ||
-                    details.appointments!.isEmpty) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          DetailsScreen(selectedDate: details.date!),
-                    ),
-                  );
-                } else {
-                  if (kDebugMode) {
-                    if (kDebugMode) {
-                      print(details.appointments!.first);
-                    }
-                  }
-                }
+                // if (details.appointments == null ||
+                //     details.appointments!.isEmpty) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DisplayScreen(
+                        filterDate:
+                            DateFormat('MMM d').format(details.date!)),
+                  ),
+                );
+                // } else {
+                //   if (kDebugMode) {
+                //     if (kDebugMode) {
+                //       print(details.appointments!.first);
+                //     }
+                //   }
+                //}
               },
             ),
           ),
@@ -103,143 +115,143 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 }
 
-class DetailsScreen extends StatefulWidget {
-  final DateTime selectedDate;
+// class DetailsScreen extends StatefulWidget {
+//   final DateTime selectedDate;
 
-  const DetailsScreen({super.key, required this.selectedDate});
+//   const DetailsScreen({super.key, required this.selectedDate});
 
-  @override
-  // ignore: library_private_types_in_public_api
-  _DetailsScreenState createState() => _DetailsScreenState();
-}
+//   @override
+//   // ignore: library_private_types_in_public_api
+//   _DetailsScreenState createState() => _DetailsScreenState();
+// }
 
-class _DetailsScreenState extends State<DetailsScreen> {
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _titleController1 = TextEditingController();
-  TextEditingController _titleController2 = TextEditingController();
-  TextEditingController _titleController3 = TextEditingController();
-  TextEditingController _titleController4 = TextEditingController();
+// class _DetailsScreenState extends State<DetailsScreen> {
+//   TextEditingController _titleController = TextEditingController();
+//   TextEditingController _titleController1 = TextEditingController();
+//   TextEditingController _titleController2 = TextEditingController();
+//   TextEditingController _titleController3 = TextEditingController();
+//   TextEditingController _titleController4 = TextEditingController();
 
-  // ignore: prefer_typing_uninitialized_variables
-  var floatingActionButton;
+//   // ignore: prefer_typing_uninitialized_variables
+//   var floatingActionButton;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 232, 211, 217),
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 154, 192, 236),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Date: ${widget.selectedDate.day}/${widget.selectedDate.month}/${widget.selectedDate.year}',
-              style:
-                  const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            ),
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Color.fromARGB(255, 232, 211, 217),
+//       appBar: AppBar(
+//         backgroundColor: Color.fromARGB(255, 154, 192, 236),
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(20.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Text(
+//               'Date: ${widget.selectedDate.day}/${widget.selectedDate.month}/${widget.selectedDate.year}',
+//               style:
+//                   const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+//             ),
 
-            SizedBox(
-              width: 80.0,
-              height: 80.0,
-              child: IconButton(
-                icon: Icon(Icons.account_box),
-                iconSize: 80,
-                onPressed: () {},
-                tooltip: 'Add Photo',
-                color: Color.fromARGB(255, 34, 3, 50),
-              ),
-            ),
-            // ignore: prefer_const_constructors
-            SizedBox(
-              height: 10.0,
-              child: const DecoratedBox(
-                decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 244, 54, 190)),
-              ),
-            ),
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(
-                hintText: 'Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 10.0),
-            TextField(
-              controller: _titleController1,
-              maxLines: 1,
-              decoration: InputDecoration(
-                hintText: 'Phone number',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 10.0),
-            TextField(
-              controller: _titleController2,
-              maxLines: 1,
-              decoration: InputDecoration(
-                hintText: 'Category',
-                border: OutlineInputBorder(),
-              ),
-            ),
+//             SizedBox(
+//               width: 80.0,
+//               height: 80.0,
+//               child: IconButton(
+//                 icon: Icon(Icons.account_box),
+//                 iconSize: 80,
+//                 onPressed: () {},
+//                 tooltip: 'Add Photo',
+//                 color: Color.fromARGB(255, 34, 3, 50),
+//               ),
+//             ),
+//             // ignore: prefer_const_constructors
+//             SizedBox(
+//               height: 10.0,
+//               child: const DecoratedBox(
+//                 decoration: const BoxDecoration(
+//                     color: Color.fromARGB(255, 244, 54, 190)),
+//               ),
+//             ),
+//             TextField(
+//               controller: _titleController,
+//               decoration: InputDecoration(
+//                 hintText: 'Name',
+//                 border: OutlineInputBorder(),
+//               ),
+//             ),
+//             SizedBox(height: 10.0),
+//             TextField(
+//               controller: _titleController1,
+//               maxLines: 1,
+//               decoration: InputDecoration(
+//                 hintText: 'Phone number',
+//                 border: OutlineInputBorder(),
+//               ),
+//             ),
+//             SizedBox(height: 10.0),
+//             TextField(
+//               controller: _titleController2,
+//               maxLines: 1,
+//               decoration: InputDecoration(
+//                 hintText: 'Category',
+//                 border: OutlineInputBorder(),
+//               ),
+//             ),
 
-            SizedBox(height: 10.0),
-            buildDateTimePickers(),
+//             SizedBox(height: 10.0),
+//             buildDateTimePickers(),
 
-            SizedBox(height: 10.0),
-            TextField(
-              controller: _titleController3,
-              maxLines: 4,
-              decoration: InputDecoration(
-                hintText: 'Wishlist',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 10.0),
-            TextField(
-              controller: _titleController4,
-              maxLines: 4,
-              decoration: InputDecoration(
-                hintText: 'Other Information',
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//             SizedBox(height: 10.0),
+//             TextField(
+//               controller: _titleController3,
+//               maxLines: 4,
+//               decoration: InputDecoration(
+//                 hintText: 'Wishlist',
+//                 border: OutlineInputBorder(),
+//               ),
+//             ),
+//             SizedBox(height: 10.0),
+//             TextField(
+//               controller: _titleController4,
+//               maxLines: 4,
+//               decoration: InputDecoration(
+//                 hintText: 'Other Information',
+//                 border: OutlineInputBorder(),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-buildDateTimePickers() => Column(
-      children: [
-        buildFrom(),
-      ],
-    );
+// buildDateTimePickers() => Column(
+//       children: [
+//         buildFrom(),
+//       ],
+//     );
 
-buildFrom() => Row(
-      children: [
-        Expanded(
-          child: buildDropdownField(
-            text: ut.theDate(DateTime.now()),
-            onClicked: () => pickFromDateTime(),
-          ),
-        ),
-      ],
-    );
+// buildFrom() => Row(
+//       children: [
+//         Expanded(
+//           child: buildDropdownField(
+//             text: ut.theDate(DateTime.now()),
+//             onClicked: () => pickFromDateTime(),
+//           ),
+//         ),
+//       ],
+//     );
 
-buildDropdownField({
-  required String text,
-  required VoidCallback onClicked,
-}) =>
-    ListTile(
-      title: Text(text),
-      trailing: Icon(Icons.calendar_month),
-    );
+// buildDropdownField({
+//   required String text,
+//   required VoidCallback onClicked,
+// }) =>
+//     ListTile(
+//       title: Text(text),
+//       trailing: Icon(Icons.calendar_month),
+//     );
 
-pickFromDateTime() async {
-  final date = await pickFromDateTime();
-}
+// pickFromDateTime() async {
+//   final date = await pickFromDateTime();
+// }
