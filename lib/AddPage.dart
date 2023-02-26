@@ -126,12 +126,16 @@ class _AddScreenState extends State<AddScreen> {
                       BoxDecoration(color: Color.fromARGB(255, 244, 54, 190)),
                 ),
               ),
-              TextField(
+              ListTile(
+              title: TextField(
                 controller: _titleController,
                 decoration: const InputDecoration(
                   hintText: 'Name',
                   border: OutlineInputBorder(),
                 ),
+              ),
+              trailing: Icon(Icons.edit
+              ),
               ),
               SizedBox(
                 height: 10.0,
@@ -140,17 +144,21 @@ class _AddScreenState extends State<AddScreen> {
                       color: Color.fromARGB(255, 244, 54, 190)),
                 ),
               ),
-              TextField(
+              ListTile(
+              title: TextField(
                 controller: _titleController1,
                 decoration: InputDecoration(
                   hintText: 'Phone Number',
                   border: OutlineInputBorder(),
                 ),
               ),
+              trailing: Icon(Icons.edit)
+              ),
               SizedBox(height: 10.0),
               buildDateTimePickers(),
               SizedBox(height: 10.0),
-              TextField(
+              ListTile(
+              title: TextField(
                 controller: _titleController2,
                 maxLines: 1,
                 decoration: InputDecoration(
@@ -158,8 +166,11 @@ class _AddScreenState extends State<AddScreen> {
                   border: OutlineInputBorder(),
                 ),
               ),
+             trailing: Icon(Icons.edit) 
+              ),
               SizedBox(height: 10.0),
-              TextField(
+              ListTile(
+              title: TextField(
                 controller: _titleController3,
                 maxLines: 4,
                 decoration: InputDecoration(
@@ -167,14 +178,19 @@ class _AddScreenState extends State<AddScreen> {
                   border: OutlineInputBorder(),
                 ),
               ),
+              trailing: Icon(Icons.edit)
+              ),
               SizedBox(height: 10.0),
-              TextField(
+              ListTile(
+              title: TextField(
                 controller: _titleController4,
                 maxLines: 4,
                 decoration: InputDecoration(
                   hintText: 'Other information',
                   border: OutlineInputBorder(),
                 ),
+              ),
+              trailing: Icon(Icons.edit)
               ),
               SizedBox(height: 10.0),
               ElevatedButton(
