@@ -25,8 +25,6 @@ class _AddScreenState extends State<AddScreen> {
   TextEditingController _titleController3 = TextEditingController();
   TextEditingController _titleController4 = TextEditingController();
   TextEditingController _dateController = TextEditingController();
-  
-
 
   late SharedPreferences _prefs;
   Future<void> _initPrefs() async {
@@ -43,13 +41,25 @@ class _AddScreenState extends State<AddScreen> {
   Future<void> saveData() async {
     final prefs = await SharedPreferences.getInstance();
     final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-    prefs.setString('name_$timestamp', _titleController.text);
-    prefs.setString('phone_$timestamp', _titleController1.text);
-    prefs.setString('date_$timestamp', _dateController.text);
-    prefs.setString('category_$timestamp', _titleController2.text);
-    prefs.setString('wishlist_$timestamp', _titleController3.text);
-    prefs.setString('other_$timestamp', _titleController4.text);
-    prefs.setString('image_$timestamp', _imageFile.path);
+    if (_titleController.text.isNotEmpty &&
+        _titleController2.text.isNotEmpty &&
+        _dateController.text.isNotEmpty) {
+      prefs.setString('name_$timestamp', _titleController.text);
+      prefs.setString('phone_$timestamp', _titleController1.text);
+      prefs.setString('date_$timestamp', _dateController.text);
+      prefs.setString('category_$timestamp', _titleController2.text);
+      prefs.setString('wishlist_$timestamp', _titleController3.text);
+      prefs.setString('other_$timestamp', _titleController4.text);
+      prefs.setString('image_$timestamp', _imageFile.path);
+    } else {
+      // Show a message to the user indicating that the required fields are not filled.
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please fill in Name, Date and Category.'),
+          backgroundColor: Colors.purple,
+        ),
+      );
+    }
   }
 
   late DateTime NowDate = DateTime.now();
@@ -169,9 +179,21 @@ class _AddScreenState extends State<AddScreen> {
               SizedBox(height: 10.0),
               ElevatedButton(
                 onPressed: () async {
-                  await saveData();
-                  
-                  Navigator.of(context).pop();
+                  if (_titleController.text.isNotEmpty &&
+                      _titleController2.text.isNotEmpty &&
+                      _dateController.text.isNotEmpty) {
+                    await saveData();
+                    Navigator.of(context).pop();
+                  } else {
+                    // Show a message to the user indicating that the required fields are not filled.
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content:
+                            Text('Please fill in Name, Date and Category.'),
+                        backgroundColor: Colors.purple,
+                      ),
+                    );
+                  }
                 },
                 child: const Text('Add birthday'),
               ),

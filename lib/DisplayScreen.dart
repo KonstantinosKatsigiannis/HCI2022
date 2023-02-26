@@ -21,10 +21,28 @@ class _DisplayScreenState extends State<DisplayScreen> {
   void initState() {
     super.initState();
     _loadEntries();
+    
   }
+
+Future<void> _deleteEntry(String timestamp) async {
+  final prefs = await SharedPreferences.getInstance();
+  setState(() {
+    prefs.remove('name_$timestamp');
+    prefs.remove('phone_$timestamp');
+    prefs.remove('date_$timestamp');
+    prefs.remove('category_$timestamp');
+    prefs.remove('wishlist_$timestamp');
+    prefs.remove('other_$timestamp');
+    prefs.remove('image_$timestamp');
+  });
+  _loadEntries();
+}
+
+
 
   Future<void> _loadEntries() async {
     final prefs = await SharedPreferences.getInstance();
+    //await prefs.clear();
     final keys = prefs.getKeys().where((key) => key.startsWith('name_'));
     setState(() {
       _entries = keys
@@ -41,6 +59,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
           'wishlist': prefs.getString('wishlist_$timestamp') ?? '',
           'other': prefs.getString('other_$timestamp') ?? '',
           'imagePath': prefs.getString('image_$timestamp') ?? '',
+          'timestamp': timestamp,
         };
       }).toList();
     });
@@ -70,14 +89,24 @@ class _DisplayScreenState extends State<DisplayScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // if (entry['imagePath'] != '')
-                        //  Image.file(File(entry['imagePath'])),
+                        if (entry['imagePath'] != '')
+                          Image.file(File(entry['imagePath'])),
                         Text('Name: ${entry['name']}'),
-                        Text('Phone: ${entry['phone']}'),
-                        Text('Date: ${entry['date'] ?? ''}'),
-                        Text('Category: ${entry['category']}'),
-                        Text('Wishlist: ${entry['wishlist']}'),
-                        Text('Other: ${entry['other']}'),
+                        if (entry['phone'] != '')
+                          Text('Phone: ${entry['phone']}'),
+                        //Text('Date: ${entry['date'] ?? ''}'),
+                        if (entry['category'] != '')
+                          Text('Category: ${entry['category']}'),
+                        if (entry['wishlist'] != '')
+                          Text('Wishlist: ${entry['wishlist']}'),
+                        if (entry['other'] != '')
+                          Text('Other: ${entry['other']}'),
+                        ElevatedButton(
+                          onPressed: () {
+                            _deleteEntry(entry['timestamp']);
+                          },
+                          child: const Text('Delete Entry'),
+                        )
                         // if (_imageFile
                         //     .path.isNotEmpty) // only show image if it exists
                         //   Image.file(_imageFile),
