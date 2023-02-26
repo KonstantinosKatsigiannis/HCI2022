@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'My Calendar',
       home: CalendarScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -35,6 +36,32 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _selectedDate = DateTime.now();
   late DateTime NowDate;
 
+  List<String> _selectedCategories = [];
+
+  Future<void> _getSelectedCategories() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? selectedCategories =
+        prefs.getStringList('selectedCategories');
+
+    if (selectedCategories != null) {
+      setState(() {
+        _selectedCategories = selectedCategories;
+      });
+    }
+  }
+
+
+  Future<bool> _checkDate(DateTime date) async {
+    final prefs = await SharedPreferences.getInstance();
+    final keys = prefs.getKeys().where((key) => key.startsWith('name_'));
+    final matchingKeys = keys.where((key) =>
+        prefs.getString('date_${key.substring('name_'.length)}') ==
+        DateFormat('MMM d').format(date));
+    final hasMatch = matchingKeys.isNotEmpty;
+    //setState();
+    return hasMatch;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,8 +69,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
         leading: IconButton(
           tooltip: 'Options',
           icon: const Icon(Icons.menu),
-          onPressed: () {
-            Navigator.push(
+          onPressed: () async {
+            bool? filtersApplied = await Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (BuildContext context) {
@@ -51,36 +78,77 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 },
               ),
             );
+            if (filtersApplied == true) {
+            // Filters have been applied, get the selected categories
+            await _getSelectedCategories();
+            
+          }
           },
         ),
         title: const Text('My Calendar'),
-        backgroundColor: Color.fromARGB(255, 154, 192, 236),
+        backgroundColor:  Color.fromARGB(255, 134, 99, 140),
       ),
       body: Column(
         children: [
           Expanded(
             child: SfCalendar(
+              
               headerStyle: const CalendarHeaderStyle(
                 textStyle: TextStyle(
                   fontSize: 20,
                 ),
                 textAlign: TextAlign.center,
-
                 //backgroundColor: Colors.grey[200],
               ),
+              
+              showDatePickerButton: true,
               initialDisplayDate: DateTime.now(),
               cellBorderColor: Colors.black,
               view: CalendarView.month,
-              todayHighlightColor: Color.fromRGBO(67, 9, 92, 1),
+              
+              monthCellBuilder:
+                  (BuildContext context, MonthCellDetails details) {
+                return FutureBuilder<bool>(
+                  future: _checkDate(details.date),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                    final hasMatch = snapshot.data ?? false;
+                    final backgroundColor =
+                        hasMatch ? Color.fromARGB(255, 134, 99, 140) : Colors.transparent;
+                    final Color defaultColor =
+                        //Theme.of(context).brightness == Brightness.dark
+                             Color.fromARGB(255, 51, 19, 73);
+                            //: Colors.white;
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: backgroundColor,
+                        border: Border.all(color: defaultColor, width: 0.5)
+                      ),
+                      child: Center(
+                        child: Text(
+                          details.date.day.toString(),
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              
+              todayHighlightColor: const Color.fromRGBO(67, 9, 92, 1),
               backgroundColor: Color.fromARGB(255, 232, 211, 217),
               onTap: (details) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DisplayScreen(
-                        filterDate: DateFormat('MMM d').format(details.date!)),
-                  ),
-                );
+                if (details.targetElement == CalendarElement.calendarCell) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DisplayScreen(
+                          filterDate:
+                              DateFormat('MMM d').format(details.date!), selectedCategories: _selectedCategories),
+                              
+                    ),
+                  );
+                }
               },
             ),
           ),
@@ -100,7 +168,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           );
         },
         tooltip: 'Add birthday',
-        backgroundColor: Colors.purple,
+        backgroundColor: const Color.fromARGB(255, 134, 99, 140),
       ),
     );
   }

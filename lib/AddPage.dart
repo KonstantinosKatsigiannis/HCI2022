@@ -21,7 +21,7 @@ class AddScreen extends StatefulWidget {
 class _AddScreenState extends State<AddScreen> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _titleController1 = TextEditingController();
-  TextEditingController _titleController2 = TextEditingController();
+  TextEditingController _titleController2 = TextEditingController(text: 'Friends');
   TextEditingController _titleController3 = TextEditingController();
   TextEditingController _titleController4 = TextEditingController();
   TextEditingController _dateController = TextEditingController();
@@ -31,6 +31,7 @@ class _AddScreenState extends State<AddScreen> {
     _prefs = await SharedPreferences.getInstance();
   }
 
+  String _selectedCategory = 'Friends';
   @override
   void initState() {
     super.initState();
@@ -41,9 +42,7 @@ class _AddScreenState extends State<AddScreen> {
   Future<void> saveData() async {
     final prefs = await SharedPreferences.getInstance();
     final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-    if (_titleController.text.isNotEmpty &&
-        _titleController2.text.isNotEmpty &&
-        _dateController.text.isNotEmpty) {
+    if (_titleController.text.isNotEmpty && _titleController2.text.isNotEmpty && _dateController.text.isNotEmpty) {
       prefs.setString('name_$timestamp', _titleController.text);
       prefs.setString('phone_$timestamp', _titleController1.text);
       prefs.setString('date_$timestamp', _dateController.text);
@@ -55,8 +54,8 @@ class _AddScreenState extends State<AddScreen> {
       // Show a message to the user indicating that the required fields are not filled.
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please fill in Name, Date and Category.'),
-          backgroundColor: Colors.purple,
+          content: Text('Please fill in Name and Date.'),
+          backgroundColor: Color.fromARGB(255, 134, 99, 140),
         ),
       );
     }
@@ -88,13 +87,13 @@ class _AddScreenState extends State<AddScreen> {
       backgroundColor: const Color.fromARGB(255, 232, 211, 217),
       appBar: AppBar(
         title: const Text('New Entry'),
-        backgroundColor: const Color.fromARGB(255, 154, 192, 236),
+        backgroundColor: Color.fromARGB(255, 134, 99, 140),
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 width: 80.0,
@@ -118,6 +117,9 @@ class _AddScreenState extends State<AddScreen> {
                   _pickImage(ImageSource.gallery);
                 },
                 child: const Text('Choose photo from gallery'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 134, 99, 140),
+                ),
               ),
               SizedBox(
                 height: 10.0,
@@ -127,15 +129,14 @@ class _AddScreenState extends State<AddScreen> {
                 ),
               ),
               ListTile(
-              title: TextField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  hintText: 'Name',
-                  border: OutlineInputBorder(),
+                title: TextField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(
+                    hintText: 'Name',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-              ),
-              trailing: Icon(Icons.edit
-              ),
+                trailing: Icon(Icons.edit),
               ),
               SizedBox(
                 height: 10.0,
@@ -145,58 +146,73 @@ class _AddScreenState extends State<AddScreen> {
                 ),
               ),
               ListTile(
-              title: TextField(
-                controller: _titleController1,
-                decoration: InputDecoration(
-                  hintText: 'Phone Number',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              trailing: Icon(Icons.edit)
-              ),
+                  title: TextField(
+                    controller: _titleController1,
+                    decoration: InputDecoration(
+                      hintText: 'Phone Number',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  trailing: Icon(Icons.edit)),
               SizedBox(height: 10.0),
               buildDateTimePickers(),
               SizedBox(height: 10.0),
               ListTile(
-              title: TextField(
-                controller: _titleController2,
-                maxLines: 1,
-                decoration: InputDecoration(
-                  hintText: 'Category',
-                  border: OutlineInputBorder(),
+                title: DropdownButtonFormField(
+                  value: _selectedCategory,
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'Friends',
+                      child: Text('Friends'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Family',
+                      child: Text('Family'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Work',
+                      child: Text('Work'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedCategory = value!;
+                      _titleController2.text = value;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Category',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-              ),
-             trailing: Icon(Icons.edit) 
+                trailing: Icon(Icons.edit),
               ),
               SizedBox(height: 10.0),
               ListTile(
-              title: TextField(
-                controller: _titleController3,
-                maxLines: 4,
-                decoration: InputDecoration(
-                  hintText: 'Wishlist',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              trailing: Icon(Icons.edit)
-              ),
+                  title: TextField(
+                    controller: _titleController3,
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      hintText: 'Wishlist',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  trailing: Icon(Icons.edit)),
               SizedBox(height: 10.0),
               ListTile(
-              title: TextField(
-                controller: _titleController4,
-                maxLines: 4,
-                decoration: InputDecoration(
-                  hintText: 'Other information',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              trailing: Icon(Icons.edit)
-              ),
+                  title: TextField(
+                    controller: _titleController4,
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      hintText: 'Other information',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  trailing: Icon(Icons.edit)),
               SizedBox(height: 10.0),
               ElevatedButton(
                 onPressed: () async {
                   if (_titleController.text.isNotEmpty &&
-                      _titleController2.text.isNotEmpty &&
                       _dateController.text.isNotEmpty) {
                     await saveData();
                     Navigator.of(context).pop();
@@ -204,14 +220,16 @@ class _AddScreenState extends State<AddScreen> {
                     // Show a message to the user indicating that the required fields are not filled.
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content:
-                            Text('Please fill in Name, Date and Category.'),
-                        backgroundColor: Colors.purple,
+                        content: Text('Please fill in Name and Date.'),
+                        backgroundColor: Color.fromARGB(255, 134, 99, 140),
                       ),
                     );
                   }
                 },
                 child: const Text('Add birthday'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 134, 99, 140),
+                ),
               ),
             ],
           ),
