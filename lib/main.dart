@@ -33,6 +33,12 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _getSelectedCategories();
+  }
+
   DateTime _selectedDate = DateTime.now();
   late DateTime NowDate;
 
@@ -50,15 +56,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
     }
   }
 
-
   Future<bool> _checkDate(DateTime date) async {
     final prefs = await SharedPreferences.getInstance();
     final keys = prefs.getKeys().where((key) => key.startsWith('name_'));
     final matchingKeys = keys.where((key) =>
         prefs.getString('date_${key.substring('name_'.length)}') ==
-        DateFormat('MMM d').format(date));
+            DateFormat('MMM d').format(date) &&
+        _selectedCategories.contains(
+            prefs.getString('category_${key.substring('name_'.length)}')));
     final hasMatch = matchingKeys.isNotEmpty;
-    //setState();
+    //setState(() {});
     return hasMatch;
   }
 
@@ -79,20 +86,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
             );
             if (filtersApplied == true) {
-            // Filters have been applied, get the selected categories
-            await _getSelectedCategories();
-            
-          }
+              // Filters have been applied, get the selected categories
+              await _getSelectedCategories();
+            }
           },
         ),
         title: const Text('My Calendar'),
-        backgroundColor:  Color.fromARGB(255, 134, 99, 140),
+        backgroundColor: Color.fromARGB(255, 134, 99, 140),
       ),
       body: Column(
         children: [
           Expanded(
             child: SfCalendar(
-              
               headerStyle: const CalendarHeaderStyle(
                 textStyle: TextStyle(
                   fontSize: 20,
@@ -100,12 +105,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 textAlign: TextAlign.center,
                 //backgroundColor: Colors.grey[200],
               ),
-              
               showDatePickerButton: true,
               initialDisplayDate: DateTime.now(),
               cellBorderColor: Colors.black,
               view: CalendarView.month,
-              
               monthCellBuilder:
                   (BuildContext context, MonthCellDetails details) {
                 return FutureBuilder<bool>(
@@ -113,17 +116,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   builder:
                       (BuildContext context, AsyncSnapshot<bool> snapshot) {
                     final hasMatch = snapshot.data ?? false;
-                    final backgroundColor =
-                        hasMatch ? Color.fromARGB(255, 134, 99, 140) : Colors.transparent;
+                    final backgroundColor = hasMatch
+                        ? Color.fromARGB(255, 134, 99, 140)
+                        : Colors.transparent;
                     final Color defaultColor =
                         //Theme.of(context).brightness == Brightness.dark
-                             Color.fromARGB(255, 51, 19, 73);
-                            //: Colors.white;
+                        Color.fromARGB(255, 51, 19, 73);
+                    //: Colors.white;
                     return Container(
                       decoration: BoxDecoration(
-                        color: backgroundColor,
-                        border: Border.all(color: defaultColor, width: 0.5)
-                      ),
+                          color: backgroundColor,
+                          border: Border.all(color: defaultColor, width: 0.5)),
                       child: Center(
                         child: Text(
                           details.date.day.toString(),
@@ -134,7 +137,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   },
                 );
               },
-              
               todayHighlightColor: const Color.fromRGBO(67, 9, 92, 1),
               backgroundColor: Color.fromARGB(255, 232, 211, 217),
               onTap: (details) {
@@ -143,9 +145,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => DisplayScreen(
-                          filterDate:
-                              DateFormat('MMM d').format(details.date!), selectedCategories: _selectedCategories),
-                              
+                          filterDate: DateFormat('MMM d').format(details.date!),
+                          selectedCategories: _selectedCategories),
                     ),
                   );
                 }
@@ -157,8 +158,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          bool? addedEntry = await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (BuildContext context) {
@@ -166,6 +167,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
               },
             ),
           );
+          if (addedEntry == true) {
+            
+            await _getSelectedCategories();
+            //_checkDate(_selectedDate);
+          }
         },
         tooltip: 'Add birthday',
         backgroundColor: const Color.fromARGB(255, 134, 99, 140),

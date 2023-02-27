@@ -53,7 +53,7 @@ class _AddScreenState extends State<AddScreen> {
     } else {
       // Show a message to the user indicating that the required fields are not filled.
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Please fill in Name and Date.'),
           backgroundColor: Color.fromARGB(255, 134, 99, 140),
         ),
@@ -215,6 +215,7 @@ class _AddScreenState extends State<AddScreen> {
                   if (_titleController.text.isNotEmpty &&
                       _dateController.text.isNotEmpty) {
                     await saveData();
+                    //SharedPreferences prefs = await SharedPreferences.getInstance();
                     Navigator.of(context).pop();
                   } else {
                     // Show a message to the user indicating that the required fields are not filled.
