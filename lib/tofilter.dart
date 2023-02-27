@@ -55,26 +55,32 @@ class _ToFilterState extends State<ToFilter> {
       );
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: const Color.fromARGB(255, 232, 211, 217),
-        appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 134, 99, 140),
-          title: const Text('Categories'),
-        ),
-        body: ListView(
-          children: [
-            buildTotalCheckbox(allowFilters),
-            ...thefilters.map(buildSingleCheckbox).toList(),
-            
-            ElevatedButton(
-              
-              onPressed: _applyFilters,
-              child: const Text('Apply'),
-              style: ElevatedButton.styleFrom(
+  Widget build(BuildContext context) => GestureDetector(
+        onHorizontalDragEnd: (details) {
+          if (details.primaryVelocity! > 0) {
+            // User swiped from right to left, so navigate back to the previous page.
+            Navigator.pop(context);
+          }
+        },
+        child: Scaffold(
+          backgroundColor: const Color.fromARGB(255, 232, 211, 217),
+          appBar: AppBar(
+            backgroundColor: const Color.fromARGB(255, 134, 99, 140),
+            title: const Text('Categories'),
+          ),
+          body: ListView(
+            children: [
+              buildTotalCheckbox(allowFilters),
+              ...thefilters.map(buildSingleCheckbox).toList(),
+              ElevatedButton(
+                onPressed: _applyFilters,
+                child: const Text('Apply'),
+                style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromARGB(255, 134, 99, 140),
                 ),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       );
 

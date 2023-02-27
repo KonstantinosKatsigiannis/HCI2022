@@ -140,14 +140,21 @@ class _DisplayScreenState extends State<DisplayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+    onHorizontalDragEnd: (details) {
+    if (details.primaryVelocity! > 0) {
+      // User swiped from right to left, so navigate back to the previous page.
+      Navigator.pop(context);
+    }
+  },
+    child: Scaffold(
       backgroundColor: const Color.fromARGB(255, 232, 211, 217),
       appBar: AppBar(
         title: const Text('Birthdays'),
         backgroundColor: Color.fromARGB(255, 134, 99, 140),
       ),
       body: _entries.isEmpty
-          ? Center(
+          ? const Center(
               child: Text('No entries found.'),
             )
           : SingleChildScrollView(
@@ -163,14 +170,17 @@ class _DisplayScreenState extends State<DisplayScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         if (entry['imagePath'] != '')
-                          Image.file(File(entry['imagePath'])),
+                          SizedBox(
+                            width: 150,
+                            height: 150,
+                            child: Image.file(File(entry['imagePath'])),
+                          ),
                         Text('Name: ${entry['name']}'),
                         if (entry['phone'] != '')
                           Text('Phone: ${entry['phone']}'),
                         if (entry['phone'] != '')
                           ElevatedButton(
-                            onPressed: () =>
-                                launch('tel:${entry['phone']}'),
+                            onPressed: () => launch('tel:${entry['phone']}'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   const Color.fromARGB(255, 134, 99, 140),
@@ -206,6 +216,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
                 },
               ),
             ),
+    )
     );
   }
 }

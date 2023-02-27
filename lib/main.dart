@@ -116,6 +116,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   builder:
                       (BuildContext context, AsyncSnapshot<bool> snapshot) {
                     final hasMatch = snapshot.data ?? false;
+                    final isToday = (DateFormat('MMM d').format(details.date)==DateFormat('MMM d').format(DateTime.now()));
+                    //print(DateFormat('MMM d').format(details.date));
+                    //print(DateFormat('MMM d').format(DateTime.now()));
+                    //print(isToday);
                     final backgroundColor = hasMatch
                         ? Color.fromARGB(255, 134, 99, 140)
                         : Colors.transparent;
@@ -123,14 +127,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         //Theme.of(context).brightness == Brightness.dark
                         Color.fromARGB(255, 51, 19, 73);
                     //: Colors.white;
+                    final Color circleColor = isToday ? const Color.fromARGB(255, 79, 35, 87) : Colors.transparent;
+                    //final circleColor = isToday ?  Color.fromARGB(255, 79, 35, 87) : Colors.transparent;
                     return Container(
                       decoration: BoxDecoration(
                           color: backgroundColor,
                           border: Border.all(color: defaultColor, width: 0.5)),
-                      child: Center(
-                        child: Text(
-                          details.date.day.toString(),
-                          style: const TextStyle(color: Colors.black),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color:  circleColor, // specify the circle's color here
+                        ),
+                        child: Center(
+                          child: Text(
+                            details.date.day.toString(),
+                            style: const TextStyle(color: Colors.black),
+                          ),
                         ),
                       ),
                     );
