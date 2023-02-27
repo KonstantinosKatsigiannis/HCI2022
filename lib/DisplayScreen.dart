@@ -4,6 +4,7 @@ import 'dart:core';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DisplayScreen extends StatefulWidget {
   final String filterDate;
@@ -85,12 +86,13 @@ class _DisplayScreenState extends State<DisplayScreen> {
         _entries = keys
             .where((key) =>
                 prefs.getString('date_${key.substring('name_'.length)}') ==
-                        widget.filterDate &&
-                    ((prefs.getString(
+                    widget.filterDate &&
+                ((prefs.getString(
                             'category_${key.substring('name_'.length)}') ==
                         widget.selectedCategories[0]) ||
-                (prefs.getString('category_${key.substring('name_'.length)}') ==
-                    widget.selectedCategories[1])))
+                    (prefs.getString(
+                            'category_${key.substring('name_'.length)}') ==
+                        widget.selectedCategories[1])))
             .map((key) {
           final timestamp = key.substring('name_'.length);
           return {
@@ -104,18 +106,21 @@ class _DisplayScreenState extends State<DisplayScreen> {
             'timestamp': timestamp,
           };
         }).toList();
-      } else if (widget.selectedCategories.length == 3 || widget.selectedCategories.isEmpty) {
+      } else if (widget.selectedCategories.length == 3 ||
+          widget.selectedCategories.isEmpty) {
         _entries = keys
             .where((key) =>
                 prefs.getString('date_${key.substring('name_'.length)}') ==
-                        widget.filterDate &&
-                    ((prefs.getString(
+                    widget.filterDate &&
+                ((prefs.getString(
                             'category_${key.substring('name_'.length)}') ==
                         widget.selectedCategories[0]) ||
-                (prefs.getString('category_${key.substring('name_'.length)}') ==
-                    widget.selectedCategories[1]) ||
-                (prefs.getString('category_${key.substring('name_'.length)}') ==
-                    widget.selectedCategories[2])))
+                    (prefs.getString(
+                            'category_${key.substring('name_'.length)}') ==
+                        widget.selectedCategories[1]) ||
+                    (prefs.getString(
+                            'category_${key.substring('name_'.length)}') ==
+                        widget.selectedCategories[2])))
             .map((key) {
           final timestamp = key.substring('name_'.length);
           return {
@@ -162,6 +167,16 @@ class _DisplayScreenState extends State<DisplayScreen> {
                         Text('Name: ${entry['name']}'),
                         if (entry['phone'] != '')
                           Text('Phone: ${entry['phone']}'),
+                        if (entry['phone'] != '')
+                          ElevatedButton(
+                            onPressed: () =>
+                                launch('tel:${entry['phone']}'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 134, 99, 140),
+                            ),
+                            child: const Text('Call'),
+                          ),
                         //Text('Date: ${entry['date'] ?? ''}'),
                         if (entry['category'] != '')
                           Text('Category: ${entry['category']}'),
@@ -169,13 +184,17 @@ class _DisplayScreenState extends State<DisplayScreen> {
                           Text('Wishlist: ${entry['wishlist']}'),
                         if (entry['other'] != '')
                           Text('Other: ${entry['other']}'),
-                        ElevatedButton(
-                          onPressed: () {
-                            _deleteEntry(entry['timestamp']);
-                          },
-                          child: const Text('Delete'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 134, 99, 140),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _deleteEntry(entry['timestamp']);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 134, 99, 140),
+                            ),
+                            child: const Text('Delete'),
                           ),
                         )
                         // if (_imageFile

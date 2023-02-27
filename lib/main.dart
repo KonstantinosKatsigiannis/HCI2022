@@ -138,10 +138,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 );
               },
               todayHighlightColor: const Color.fromRGBO(67, 9, 92, 1),
-              backgroundColor: Color.fromARGB(255, 232, 211, 217),
-              onTap: (details) {
+              backgroundColor: const Color.fromARGB(255, 232, 211, 217),
+              onTap: (details) async {
                 if (details.targetElement == CalendarElement.calendarCell) {
-                  Navigator.push(
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => DisplayScreen(
@@ -149,6 +149,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           selectedCategories: _selectedCategories),
                     ),
                   );
+                  await _getSelectedCategories();
                 }
               },
             ),
