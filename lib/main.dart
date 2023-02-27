@@ -157,9 +157,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
         onPressed: () async {
-          bool? addedEntry = await Navigator.push(
+          //bool? addedEntry =
+          await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (BuildContext context) {
@@ -167,14 +167,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
               },
             ),
           );
-          if (addedEntry == true) {
-            
-            await _getSelectedCategories();
-            //_checkDate(_selectedDate);
-          }
+          await _getSelectedCategories();
         },
         tooltip: 'Add birthday',
         backgroundColor: const Color.fromARGB(255, 134, 99, 140),
+        child: const Icon(Icons.add),
       ),
     );
   }
