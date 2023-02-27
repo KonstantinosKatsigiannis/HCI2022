@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:my_calendar/Services/Noti.dart';
 import 'ut.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 //show Appointment, CalendarView, SfCalendar, CalendarHeaderStyle;
@@ -8,8 +9,15 @@ import 'AddPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'DisplayScreen.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+//import 'services/Noti.dart';
 
-void main() => runApp(const MyApp());
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
+
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -36,6 +44,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   void initState() {
     super.initState();
+    Noti.initialize(flutterLocalNotificationsPlugin);
+    _birthday();
     _getSelectedCategories();
   }
 
@@ -53,6 +63,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
       setState(() {
         _selectedCategories = selectedCategories;
       });
+    }
+  }
+
+    Future<void> _birthday() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final keys = prefs.getKeys().where((key) => key.startsWith('name_'));
+    List<String>? today = keys
+            .where((key) =>
+                prefs.getString('date_${key.substring('name_'.length)}')==DateFormat('MMM d').format(DateTime.now())).toList();
+
+    if (today.isNotEmpty) {
+Noti.showBigTextNotification(title: "It's someone's birthday!", body: "Check who's birthday it is!", fln: flutterLocalNotificationsPlugin);
     }
   }
 
